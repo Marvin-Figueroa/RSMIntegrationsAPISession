@@ -4,7 +4,6 @@
 
     using System.Net;
     using System.Text.Json;
-    using System.Text.Json.Serialization;
 
     public class ExceptionMiddleware
     {
@@ -45,7 +44,7 @@
 
             }
             var response = new { message = ex.Message, statusCode, details };
-            
+
             var jsonResponse = JsonSerializer.Serialize(response);
             context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
