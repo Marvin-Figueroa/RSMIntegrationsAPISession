@@ -1,5 +1,7 @@
 ﻿namespace RSMEnterpriseIntegrationsAPI.Application.Services
 {
+    using AutoMapper;
+    using FluentValidation;
     using RSMEnterpriseIntegrationsAPI.Application.DTOs;
     using RSMEnterpriseIntegrationsAPI.Application.Exceptions;
     using RSMEnterpriseIntegrationsAPI.Domain.Interfaces;
@@ -11,108 +13,85 @@
     public class DepartmentService : IDepartmentService
     {
         private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentService(IDepartmentRepository repository)
+        private readonly IValidator<CreateDepartmentDto> _createDepartmentValidator;
+        private readonly IValidator<UpdateDepartmentDto> _updateDepartmentValidator;
+        private readonly IMapper _mapper;
+
+        public DepartmentService(IDepartmentRepository repository, IValidator<CreateDepartmentDto> createDepartmentValidator, IValidator<UpdateDepartmentDto> updateDepartmentValidator, IMapper mapper)
         {
             _departmentRepository = repository;
+            _createDepartmentValidator = createDepartmentValidator;
+            _updateDepartmentValidator = updateDepartmentValidator;
+            _mapper = mapper;
         }
 
         public async Task<int> CreateDepartment(CreateDepartmentDto departmentDto)
         {
-            if (departmentDto is null 
-                || string.IsNullOrWhiteSpace(departmentDto.Name) 
-                || string.IsNullOrWhiteSpace(departmentDto.GroupName))
+            var validationResult = _createDepartmentValidator.Validate(departmentDto);
+
+            if (!validationResult.IsValid)
             {
-                throw new BadRequestException("Department info is not valid.");
+                throw new BadRequestException("Department info is not valid. " + string.Join(" ", validationResult.Errors.Select(error => error.ErrorMessage)));
             }
 
-            Department department = new()
-            {
-                GroupName = departmentDto.GroupName,
-                Name = departmentDto.Name,
-            };
+            var department = _mapper.Map<Department>(departmentDto);
 
             return await _departmentRepository.CreateDepartment(department);
         }
 
         public async Task<int> DeleteDepartment(int id)
         {
-            if(id <= 0)
+
+            if (id <= 0)
             {
                 throw new BadRequestException("Id is not valid.");
             }
-            var department = await ValidateDepartmentExistence(id);
+
+            var department = await _departmentRepository.GetDepartmentById(id);
+
+            if (department == null) throw new NotFoundException($"Department with Id: {id} was not found.");
+
             return await _departmentRepository.DeleteDepartment(department);
         }
 
         public async Task<IEnumerable<GetDepartmentDto>> GetAll()
         {
             var departments = await _departmentRepository.GetAllDepartments();
-            List<GetDepartmentDto> departmentsDto = [];
+            return _mapper.Map<IEnumerable<GetDepartmentDto>>(departments);
 
-            foreach (var department in departments)
-            {
-                GetDepartmentDto dto = new()
-                {
-                    Name = department.Name,
-                    GroupName = department.GroupName,
-                    DepartmentId = department.DepartmentId
-                };
-
-                departmentsDto.Add(dto);
-            }
-            
-            /*departments.ToList().ForEach(department =>
-            {
-                GetDepartmentDto dto = new()
-                {
-                    DepartmentId = department.DepartmentId,
-                    Name = department.Name,
-                    GroupName = department.GroupName
-                };
-                departmentsDto.Add(dto);
-            });*/
-
-            return departmentsDto; 
         }
 
         public async Task<GetDepartmentDto?> GetDepartmentById(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 throw new BadRequestException("DepartmentId is not valid");
             }
 
-            var department = await ValidateDepartmentExistence(id);
-            
-            GetDepartmentDto dto = new()
-            {
-                DepartmentId = department.DepartmentId,
-                Name = department.Name,
-                GroupName = department.GroupName
-            };
-            return dto;
+            var department = await _departmentRepository.GetDepartmentById(id);
+
+            if (department == null) throw new NotFoundException($"Department with Id: {id} was not found.");
+
+            department = await _departmentRepository.GetDepartmentById(id);
+            return _mapper.Map<GetDepartmentDto>(department);
         }
 
         public async Task<int> UpdateDepartment(UpdateDepartmentDto departmentDto)
         {
-            if(departmentDto is null)
+            var department = await _departmentRepository.GetDepartmentById(departmentDto.DepartmentId);
+
+            if (department == null) throw new NotFoundException($"Department with Id: {departmentDto.DepartmentId} was not found.");
+
+            var validationResult = _updateDepartmentValidator.Validate(departmentDto);
+
+            if (!validationResult.IsValid)
             {
-                throw new BadRequestException("Department info is not valid.");
+                throw new BadRequestException("Department info is not valid. " + string.Join(" ", validationResult.Errors.Select(error => error.ErrorMessage)));
             }
-            var department = await ValidateDepartmentExistence(departmentDto.DepartmentId);
-            
-            department.Name = string.IsNullOrWhiteSpace(departmentDto.Name) ? department.Name : departmentDto.Name;
-            department.GroupName = string.IsNullOrWhiteSpace(departmentDto.GroupName) ? department.GroupName : departmentDto.GroupName;
-           
+
+            department = _mapper.Map<Department>(departmentDto);
+
             return await _departmentRepository.UpdateDepartment(department);
-        }
-
-        private async Task<Department> ValidateDepartmentExistence(int id)
-        {
-            var existingDepartment = await _departmentRepository.GetDepartmentById(id) 
-                ?? throw new NotFoundException($"Department with Id: {id} was not found.");
-
-            return existingDepartment;
         }
 
     }
