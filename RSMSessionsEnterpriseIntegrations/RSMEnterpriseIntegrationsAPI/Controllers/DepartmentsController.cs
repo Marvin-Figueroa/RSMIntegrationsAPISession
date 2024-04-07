@@ -5,7 +5,7 @@
     using RSMEnterpriseIntegrationsAPI.Application.DTOs;
     using RSMEnterpriseIntegrationsAPI.Domain.Interfaces;
 
-    [Route("api/[controller]")]
+    [Route("api/departments")]
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
@@ -16,31 +16,31 @@
             _service = service;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> Get()
+        [HttpGet("")]
+        public async Task<IActionResult> GetAll()
         {
             return Ok(await _service.GetAll());
         }
 
-        [HttpGet("Get")]        
-        public async Task<IActionResult> Get([FromQuery]int id)
+        [HttpGet("{id}")]        
+        public async Task<IActionResult> GetById(int id)
         {
             return Ok(await _service.GetDepartmentById(id));
         }
 
-        [HttpDelete("Delete/{id:int}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             return Ok(await _service.DeleteDepartment(id));
         }
 
-        [HttpPost("Create")]
+        [HttpPost("")]
         public async Task<IActionResult> Create(CreateDepartmentDto dto)
         {
             return Ok(await _service.CreateDepartment(dto));
         }
 
-        [HttpPut("Update")]
+        [HttpPut("")]
         public async Task<IActionResult> Update(UpdateDepartmentDto dto)
         {
             return Ok(await _service.UpdateDepartment(dto));
