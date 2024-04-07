@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 using RSMEnterpriseIntegrationsAPI.Application.Services;
@@ -8,10 +9,16 @@ using RSMEnterpriseIntegrationsAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddValidatorsFromAssemblyContaining<CreateDepartmentDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateDepartmentDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateProductDtoValidator>();
+
+builder.Services.AddAutoMapper(typeof(DepartmentMappingProfile));
+builder.Services.AddAutoMapper(typeof(ProductMappingProfile));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -23,6 +30,8 @@ builder.Services.AddDbContext<AdvWorksDbContext>(options =>
 
 builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IProductService, ProductService>();
 
 var app = builder.Build();
 
