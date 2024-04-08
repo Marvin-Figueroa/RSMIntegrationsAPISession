@@ -12,15 +12,6 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
     RuleFor(dto => dto.StandardCost).GreaterThanOrEqualTo(0).WithMessage("Standard cost must be greater than or equal to 0.");
     RuleFor(dto => dto.ListPrice).GreaterThanOrEqualTo(0).WithMessage("List price must be greater than or equal to 0.");
     RuleFor(dto => dto.DaysToManufacture).GreaterThan(0).WithMessage("Days to manufacture must be greater than 0.");
-    RuleFor(dto => dto.ProductLine)
-    .Must(productLine => new[] { "R", "M", "T", "S" }.Contains(productLine.Trim()))
-    .WithMessage("ProductLine must be 'R', 'M', 'T' or 'S'.");
-    RuleFor(dto => dto.Class)
-    .Must(productClass => new[] { "H", "M", "L" }.Contains(productClass.Trim()))
-    .WithMessage("Class must be 'H', 'M', or 'L'.");
-    RuleFor(dto => dto.Style)
-    .Must(style => new[] { "W", "M", "U" }.Contains(style.Trim()))
-    .WithMessage("Style must be 'W', 'M', or 'U'.");
     RuleFor(dto => dto.SellStartDate).NotEmpty().WithMessage("Sell start date is required.");
     RuleFor(dto => dto.SellEndDate)
         .Null()
