@@ -13,9 +13,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateDepartmentDtoValidato
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateDepartmentDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateProductDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductCategoryDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateProductCategoryDtoValidator>();
 
 builder.Services.AddAutoMapper(typeof(DepartmentMappingProfile));
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile));
+builder.Services.AddAutoMapper(typeof(ProductCategoryMappingProfile));
 
 builder.Services.AddControllers();
 
@@ -32,6 +35,8 @@ builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductCategoryRepository, ProductCategoryRepository>();
+builder.Services.AddTransient<IProductCategoryService, ProductCategoryService>();
 
 var app = builder.Build();
 
