@@ -30,10 +30,12 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Repositories
       return await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Product>> GetAllProducts()
+    public async Task<IEnumerable<Product>> GetAllProducts(int pageNumber, int pageSize)
     {
       return await _context.Set<Product>()
           .AsNoTracking()
+          .Skip((pageNumber - 1) * pageSize)
+          .Take(pageSize)
           .ToListAsync();
     }
 

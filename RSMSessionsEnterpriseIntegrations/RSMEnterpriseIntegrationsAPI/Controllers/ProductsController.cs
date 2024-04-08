@@ -16,9 +16,9 @@ namespace RSMEnterpriseIntegrationsAPI.Controllers
     }
 
     [HttpGet("")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 20)
     {
-      return Ok(await _service.GetAll());
+      return Ok(await _service.GetAll(pageNumber, pageSize));
     }
 
     [HttpGet("{id}")]

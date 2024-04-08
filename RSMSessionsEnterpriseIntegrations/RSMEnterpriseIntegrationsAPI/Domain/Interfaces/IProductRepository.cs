@@ -5,7 +5,7 @@ namespace RSMEnterpriseIntegrationsAPI.Domain.Interfaces
   public interface IProductRepository
   {
     Task<Product?> GetProductById(int id);
-    Task<IEnumerable<Product>> GetAllProducts();
+    Task<IEnumerable<Product>> GetAllProducts(int pageNumber, int pageSize);
     Task<int> CreateProduct(Product product);
     Task<int> UpdateProduct(Product product);
     Task<int> DeleteProduct(Product product);

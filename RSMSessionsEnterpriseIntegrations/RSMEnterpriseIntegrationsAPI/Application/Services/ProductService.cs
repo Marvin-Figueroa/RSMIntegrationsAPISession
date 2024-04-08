@@ -54,9 +54,9 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
       return await _productRepository.DeleteProduct(product);
     }
 
-    public async Task<IEnumerable<GetProductDto>> GetAll()
+    public async Task<IEnumerable<GetProductDto>> GetAll(int pageNumber, int pageSize)
     {
-      var products = await _productRepository.GetAllProducts();
+      var products = await _productRepository.GetAllProducts(pageNumber, pageSize);
       return _mapper.Map<IEnumerable<GetProductDto>>(products);
 
     }
