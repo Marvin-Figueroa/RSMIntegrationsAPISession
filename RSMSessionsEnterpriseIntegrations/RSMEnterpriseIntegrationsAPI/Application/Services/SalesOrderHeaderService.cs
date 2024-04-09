@@ -54,9 +54,9 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
       return await _salesOrderHeaderRepository.DeleteSalesOrderHeader(salesOrderHeader);
     }
 
-    public async Task<IEnumerable<GetSalesOrderHeaderDto>> GetAll()
+    public async Task<IEnumerable<GetSalesOrderHeaderDto>> GetAll(int pageNumber, int pageSize)
     {
-      var salesOrderHeaders = await _salesOrderHeaderRepository.GetAllSalesOrderHeaders();
+      var salesOrderHeaders = await _salesOrderHeaderRepository.GetAllSalesOrderHeaders(pageNumber, pageSize);
 
       return _mapper.Map<IEnumerable<GetSalesOrderHeaderDto>>(salesOrderHeaders);
 
