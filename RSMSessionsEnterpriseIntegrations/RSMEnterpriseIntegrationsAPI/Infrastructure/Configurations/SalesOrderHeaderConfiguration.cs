@@ -33,7 +33,7 @@ public class SalesOrderHeaderConfiguration : IEntityTypeConfiguration<SalesOrder
     builder.Property(e => e.Freight).IsRequired();
     builder.Property(e => e.TotalDue).HasComputedColumnSql();
     builder.Property(e => e.Comment);
-    builder.Property(e => e.Rowguid).HasColumnName("rowguid");
+    builder.Property(e => e.Rowguid).HasComputedColumnSql().HasColumnName("rowguid");
     builder.Property(e => e.ModifiedDate).IsRequired();
   }
 }

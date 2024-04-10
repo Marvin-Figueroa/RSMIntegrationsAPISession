@@ -35,7 +35,7 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Configurations
       builder.Property(e => e.SellStartDate).IsRequired();
       builder.Property(e => e.SellEndDate);
       builder.Property(e => e.DiscontinuedDate);
-      builder.Property(e => e.Rowguid).HasColumnName("rowguid");
+      builder.Property(e => e.Rowguid).HasComputedColumnSql().HasColumnName("rowguid");
       builder.Property(e => e.ModifiedDate);
 
 

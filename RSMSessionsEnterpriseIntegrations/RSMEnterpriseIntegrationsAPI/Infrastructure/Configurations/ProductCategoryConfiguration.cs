@@ -14,7 +14,7 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Configurations
       builder.HasKey(e => e.ProductCategoryId);
       builder.Property(e => e.ProductCategoryId).HasColumnName("ProductCategoryID");
       builder.Property(e => e.Name).IsRequired();
-      builder.Property(e => e.Rowguid).HasColumnName("rowguid");
+      builder.Property(e => e.Rowguid).HasComputedColumnSql().HasColumnName("rowguid");
     }
   }
 }
