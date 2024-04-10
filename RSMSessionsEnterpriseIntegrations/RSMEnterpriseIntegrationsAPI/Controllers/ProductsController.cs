@@ -1,5 +1,6 @@
 namespace RSMEnterpriseIntegrationsAPI.Controllers
 {
+  using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Mvc;
 
   using RSMEnterpriseIntegrationsAPI.Application.DTOs;
@@ -27,18 +28,21 @@ namespace RSMEnterpriseIntegrationsAPI.Controllers
       return Ok(await _service.GetProductById(id));
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
       return Ok(await _service.DeleteProduct(id));
     }
 
+    [Authorize]
     [HttpPost("")]
     public async Task<IActionResult> Create(CreateProductDto dto)
     {
       return Ok(await _service.CreateProduct(dto));
     }
 
+    [Authorize]
     [HttpPut("")]
     public async Task<IActionResult> Update(UpdateProductDto dto)
     {
