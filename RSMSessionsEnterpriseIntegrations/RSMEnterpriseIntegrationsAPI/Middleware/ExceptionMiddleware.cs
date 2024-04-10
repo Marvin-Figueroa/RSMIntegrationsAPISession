@@ -32,11 +32,14 @@
             string details = string.Empty;
             switch (ex)
             {
-                case BadRequestException badRequestException:
+                case BadRequestException:
                     statusCode = HttpStatusCode.BadRequest;
                     break;
-                case NotFoundException NotFound:
+                case NotFoundException:
                     statusCode = HttpStatusCode.NotFound;
+                    break;
+                case UnauthorizedException:
+                    statusCode = HttpStatusCode.Unauthorized;
                     break;
                 default:
                     details = ex.StackTrace ?? "";
